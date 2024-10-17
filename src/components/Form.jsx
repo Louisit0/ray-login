@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
+import LoginForm from "./LoginForm";
+import SignUpForm from "./SignUpForm";
 
 function Form() {
-  const [haveAccount, setHaveAccount] = useState(false);
-  //form
+  const [haveAccount, setHaveAccount] = useState(true);
+  // Form
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,7 +17,6 @@ function Form() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      // Si el usuario ya está autenticado, redirigir a /home
       setLocation("/home");
     }
   }, [setLocation]);
@@ -32,18 +33,12 @@ function Form() {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
-    switch (name) {
-      case "name":
-        setName(value);
-        break;
-      case "email":
-        setEmail(value);
-        break;
-      case "password":
-        setPassword(value);
-        break;
-      default:
-        break;
+    if (name === "name") {
+      setName(value);
+    } else if (name === "email") {
+      setEmail(value);
+    } else if (name === "password") {
+      setPassword(value);
     }
   };
 
@@ -57,11 +52,8 @@ function Form() {
     })
       .then((response) => response.json())
       .then((data) => {
-        // Ahora se espera el token en la respuesta
         if (data.token) {
-          // Puedes guardar el token en localStorage o en el estado
-          localStorage.setItem("token", data.token); // Guarda el token
-          // Redirige a la página de inicio
+          localStorage.setItem("token", data.token);
           setLocation("/home");
         } else {
           setFormError("Credenciales incorrectas");
@@ -82,161 +74,70 @@ function Form() {
       .then((data) => {
         if (data.userId) {
           setFormError("");
-          setHaveAccount(true); // Cambia a la vista de inicio de sesión
-          setFormSuccess("Cuenta creada con éxito.");
+          setEmail("");
+          setPassword("");
+          setHaveAccount(true);
+          setFormSuccess("Account created successfully");
         } else {
-          // Muestra el mensaje de error del servidor
-          setFormError("Ya existe un usuario con ese email.");
+          setFormError("Already an existing account with this email.");
         }
       })
       .catch((error) => {
         console.error("Error:", error);
-        setFormError("Error al crear la cuenta");
+        setFormError("Couldn't create the account.");
       });
   };
 
-  const submit = () => {
+  const submit = (event) => {
+    event.preventDefault();
+
     if (!email || !password || (!haveAccount && !name)) {
-      setFormError("Complete el formulario");
+      setFormError("Fill in the form");
       return;
     }
 
-    // Validar longitud mínima del nombre y la contraseña
     if (!haveAccount && name.length < 3) {
-      setFormError("El nombre debe tener al menos 3 caracteres.");
+      setFormError("Name should at least have 3 letters.");
       return;
     }
 
     if (password.length < 5) {
-      setFormError("La contraseña debe tener al menos 5 caracteres.");
+      setFormError("Password should at least have 5 characters.");
       return;
     }
 
     if (haveAccount) {
       login();
-      setFormError("");
     } else {
       createAccount();
-      setFormError("");
     }
+
+    setFormError("");
   };
 
   return (
     <>
-      {haveAccount === true ? (
-        <div className="flex flex-col border w-full md:w-1/3 p-8 gap-4 rounded-xl bg-white">
-          <h1 className="text-3xl font-bold">
-            <span className="text-red-600">RAY </span>SIGNIN
-          </h1>
-          <hr />
-          <div className="flex flex-col">
-            <label className="font-medium">Email</label>
-            <input
-              className="border rounded-xl p-2"
-              type="email"
-              name="email"
-              id="email"
-              placeholder="Your email"
-              value={email}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="font-medium">Password</label>
-            <input
-              className="border rounded-xl p-2"
-              type="password"
-              name="password"
-              id="password"
-              placeholder="Your password"
-              value={password}
-              onChange={handleInputChange}
-            />
-          </div>
-          <p className={`text-green-600 font-medium`}>{formSuccess}</p>
-          <p className={`text-red-600 font-medium`}>{formError}</p>
-          <button
-            type="submit"
-            onClick={submit}
-            className="bg-red-600 hover:bg-red-700 p-2 rounded text-white font-bold uppercase"
-          >
-            Log in
-          </button>
-          <hr />
-          <p className="text-center">
-            Don&apos;t have an account?{" "}
-            <a
-              onClick={changeForm}
-              className="font-medium cursor-pointer hover:underline"
-            >
-              Create now
-            </a>
-          </p>
-          <a></a>
-        </div>
+      {haveAccount ? (
+        <LoginForm
+          email={email}
+          password={password}
+          handleInputChange={handleInputChange}
+          submit={submit}
+          changeForm={changeForm}
+          formError={formError}
+          formSuccess={formSuccess}
+        />
       ) : (
-        <div className="flex flex-col border w-full md:w-1/3 p-8 gap-4 rounded-xl bg-white">
-          <h1 className="text-3xl font-bold">
-            <span className="text-red-600">RAY </span>SIGNUP
-          </h1>
-          <hr />
-          <div className="flex flex-col">
-            <label>Name</label>
-            <input
-              className="border rounded-xl p-2"
-              type="text"
-              name="name"
-              id="name"
-              placeholder="Your name"
-              value={name}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="flex flex-col">
-            <label>Email</label>
-            <input
-              className="border rounded-xl p-2"
-              type="email"
-              name="email"
-              id="email"
-              placeholder="Your email"
-              value={email}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="flex flex-col">
-            <label>Password</label>
-            <input
-              className="border rounded-xl p-2"
-              type="password"
-              name="password"
-              id="password"
-              placeholder="Create password"
-              value={password}
-              onChange={handleInputChange}
-            />
-          </div>
-          <p className={`text-green-600 font-medium`}>{formSuccess}</p>
-          <p className={`text-red-600 font-medium`}>{formError}</p>
-          <button
-            type="submit"
-            onClick={submit}
-            className="bg-red-600 hover:bg-red-700 p-2 rounded text-white font-bold uppercase"
-          >
-            Create account
-          </button>
-          <hr />
-          <p className="text-center">
-            Have an account?{" "}
-            <a
-              onClick={changeForm}
-              className="font-medium cursor-pointer hover:underline"
-            >
-              Log in
-            </a>
-          </p>
-          <a></a>
-        </div>
+        <SignUpForm
+          name={name}
+          email={email}
+          password={password}
+          handleInputChange={handleInputChange}
+          submit={submit}
+          changeForm={changeForm}
+          formError={formError}
+          formSuccess={formSuccess}
+        />
       )}
     </>
   );
