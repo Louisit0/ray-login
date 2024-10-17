@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
-import LoginForm from "./LoginForm";
-import SignUpForm from "./SignUpForm";
 
 function Form() {
   const [haveAccount, setHaveAccount] = useState(true);
