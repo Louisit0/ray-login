@@ -7,7 +7,6 @@ const Home = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      // Si el usuario no tiene token, redirigir a /login
       setLocation("/");
     }
   }, [setLocation]);

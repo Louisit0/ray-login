@@ -20,7 +20,6 @@ app.get("/", (req, res) => {
 app.post("/signup", (req, res) => {
   const { name, email, password } = req.body;
 
-  // Normalizar el email
   const normalizedEmail = email.toLowerCase();
 
   // Verificar si el correo electrónico ya está en uso
@@ -32,7 +31,6 @@ app.post("/signup", (req, res) => {
         .json({ message: "Error en la base de datos", error: err.message });
     }
     if (row) {
-      // Si ya existe un usuario con ese correo
       return res
         .status(400)
         .json({ message: "Ya existe una cuenta con ese email." });
