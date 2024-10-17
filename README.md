@@ -1,13 +1,13 @@
-RAY Authentication API Documentation
+# RAY Authentication API Documentation
 
-Base URL
+## Base URL
 The base URL for all API endpoints is:
 http://localhost:3000
 
-Authentication
+## Authentication
 This API uses JSON Web Tokens (JWT) for authentication. After a successful login, a token is provided which should be included in the header of subsequent requests.
 
-Endpoints
+## Endpoints
 Sign Up
 Creates a new user account.
 
@@ -15,10 +15,10 @@ URL: /signup
 Method: POST
 Content-Type: application/json
 
-Request Body
+## Request Body
 name, email and password.
 
-Success Response
+## Success Response
 
 Code: 201
 Content:
@@ -27,7 +27,8 @@ jsonCopy{
   "message": "Usuario registrado con éxito",
   "userId": 1
 }
-Error Response
+
+## Error Response
 
 Code: 400
 Content:
@@ -36,17 +37,17 @@ jsonCopy{
   "message": "Ya existe una cuenta con ese email."
 }
 
-Login
+## Login
 Authenticates a user and returns a token.
 
 URL: /login
 Method: POST
 Content-Type: application/json
 
-Request Body
+## Request Body
 email and password.
 
-Success Response
+## Success Response
 
 Code: 200
 Content:
@@ -60,7 +61,8 @@ jsonCopy{
   },
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
-Error Response
+
+## Error Response
 
 Code: 401
 Content:
@@ -69,7 +71,7 @@ jsonCopy{
   "message": "Credenciales incorrectas"
 }
 
-Data Model (SQLite)
+## Data Model (SQLite)
 
 Field: id, name, email, password
 Type:  int, text, text, text
