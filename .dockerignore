@@ -1,0 +1,11 @@
+# Ignorar node_modules en la raíz
+node_modules
+
+# Ignorar node_modules en la carpeta del servidor
+server/node_modules
+
+# Ignorar archivos de registro
+*.log
+
+# Ignorar archivos de entorno
+.env

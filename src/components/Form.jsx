@@ -56,7 +56,7 @@ function Form() {
           localStorage.setItem("token", data.token);
           setLocation("/home");
         } else {
-          setFormError("Credenciales incorrectas");
+          setFormError("Wrong credentials.");
         }
       })
       .catch((error) => console.error("Error:", error));
